@@ -8,8 +8,8 @@ import schema from './schema';
 
 const insertUser: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (event) => {
   const { name, cpf, email, password } = event.body;
-  await insert(name, cpf, email, password);
-  return formatJSONResponse({ name, cpf, email, password });
+  const user = await insert(name, cpf, email, password);
+  return formatJSONResponse(201, { user });
 };
 
 export const main = middyfy(insertUser);

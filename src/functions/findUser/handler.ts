@@ -6,7 +6,10 @@ import { findOne } from '../../services/user-service';
 const findOneUser = async (event) => {
   const id = event.pathParameters.id;
   const user = await findOne(id);
-  return formatJSONResponse({ user });
+  if(user){
+    return formatJSONResponse(200, { user });
+  }
+  return { statusCode: 404 };
 };
 
 export const main = middyfy(findOneUser);

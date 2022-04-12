@@ -12,23 +12,26 @@ export const findOne = async (id: string) => {
   return result[0];
 }
 
-export const insert = async (name: string, cpf: string, email: string, password: string) => {
-  const result = await mysql.query('INSERT INTO users VALUES (default, ?, ?, ?, ?, default, default)', [name, cpf, email, password])
-  return result;
+export const insert = async (...data: string[]) => {
+  const result = await mysql.query('INSERT INTO users VALUES (default, ?, ?, ?, ?, default, default)', data);
+  return findOne(result.insertId);
 }
 
-export const update = async (data: any, id: string) => {
-  const result = await mysql.query(buildQuery(data, id));
-  return result;
+export const update = async (entries: any, id: string) => {
+  const result = await mysql.query(buildQuery(entries, id));
+  if(result.affectedRows !== 0){
+    return findOne(id);
+  }
+  return null;
 }
 
 export const deleteOne = async (id: string) => {
   const result = await mysql.query(`DELETE FROM users WHERE id = ${id}`);
-  return result;
+  return result.affectedRows !== 0;
 }
 
 const buildQuery = (entries: any, id: string) => {
-  let query = 'UPDATE users SET ';
+  let query = 'UPDATE users SET updatedAt = now(), ';
   entries.forEach((elem: string[], index: number, array: string[][]) => {
     query += `${elem[0]} = '${elem[1]}'`;
     query += (index === array.length-1) ? ' ' : ', ';
