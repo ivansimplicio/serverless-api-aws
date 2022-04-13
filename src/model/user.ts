@@ -4,6 +4,6 @@ export interface User {
   cpf: String;
   email: String;
   password: String;
-  createdAt: String;
-  updatedAt: String;
+  created_at: String;
+  updated_at: String;
 }

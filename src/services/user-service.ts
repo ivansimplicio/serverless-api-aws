@@ -31,7 +31,7 @@ export const deleteOne = async (id: string) => {
 }
 
 const buildQuery = (entries: any, id: string) => {
-  let query = 'UPDATE users SET updatedAt = now(), ';
+  let query = 'UPDATE users SET updated_at = now(), ';
   entries.forEach((elem: string[], index: number, array: string[][]) => {
     query += `${elem[0]} = '${elem[1]}'`;
     query += (index === array.length-1) ? ' ' : ', ';
