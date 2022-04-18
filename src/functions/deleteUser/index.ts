@@ -8,6 +8,19 @@ export default {
         method: 'delete',
         path: 'users/{id}',
         cors: true,
+        authorizer: {
+          name: "PrivateAuthorizer",
+          type: "COGNITO_USER_POOLS",
+          arn: {
+            "Fn::GetAtt": [
+              "UserPool",
+              "Arn"
+            ]
+          },
+          claims: [
+            "email"
+          ]
+        }
       },
     },
   ],

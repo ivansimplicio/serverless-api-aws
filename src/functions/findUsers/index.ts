@@ -7,6 +7,20 @@ export default {
       http: {
         method: 'get',
         path: 'users',
+        cors: true,
+        authorizer: {
+          name: "PrivateAuthorizer",
+          type: "COGNITO_USER_POOLS",
+          arn: {
+            "Fn::GetAtt": [
+              "UserPool",
+              "Arn"
+            ]
+          },
+          claims: [
+            "email"
+          ]
+        }
       },
     },
   ],

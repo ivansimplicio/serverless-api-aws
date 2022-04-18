@@ -19,7 +19,10 @@ const serverlessConfiguration: AWS = {
         "Action": [
           "ec2:CreateNetworkInterface",
           "ec2:DescribeNetworkInterfaces",
-          "ec2:DeleteNetworkInterface"
+          "ec2:DeleteNetworkInterface",
+          "cognito-idp:AdminInitiateAuth",
+          "cognito-idp:AdminCreateUser",
+          "cognito-idp:AdminSetUserPassword"
         ],
         "Resource": [
           "*"
@@ -31,12 +34,37 @@ const serverlessConfiguration: AWS = {
       shouldStartNameWithService: true,
     },
     environment: {
+      user_pool_id: {
+        Ref: "UserPool"
+      },
+      client_id: {
+        Ref: "UserClient"
+      },
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
     },
   },
   // import the function via paths
   functions: { findUser, findUsers, createUser, updateUser, deleteUser },
+  resources: {
+    Resources: {
+      UserPool: {
+        Type: "AWS::Cognito::UserPool",
+        Properties: {
+          UserPoolName: "serverless-auth-pool",
+        }
+      },
+      UserClient: {
+        Type: "AWS::Cognito::UserPoolClient",
+        Properties: {
+          ClientName: "user-pool-ui",
+          UserPoolId: {
+            Ref: "UserPool"
+          },
+        }
+      }
+    }
+  },
   package: { individually: true },
   custom: {
     esbuild: {
