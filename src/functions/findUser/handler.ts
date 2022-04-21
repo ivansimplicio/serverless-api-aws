@@ -1,3 +1,4 @@
+import { notFound } from './../../libs/helper';
 import { formatJSONResponse } from '@libs/api-gateway';
 import { middyfy } from '@libs/lambda';
 
@@ -9,7 +10,7 @@ const findOneUser = async (event) => {
   if(user){
     return formatJSONResponse(200, { user });
   }
-  return { statusCode: 404 };
+  return formatJSONResponse(404, notFound());;
 };
 
 export const main = middyfy(findOneUser);
